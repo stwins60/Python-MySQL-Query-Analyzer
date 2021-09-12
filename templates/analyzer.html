@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+    <title>SQL QUERY ANALYZER</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>SQL QUERY ANALYZER</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form action="/analyzer" method="post">
+                    <div class="form-group">
+                        <label for="query" class="label">Host Name</label>
+                        <input type="text" class="form-control" name="host" id="host" placeholder="Enter Host Name"><br><br>
+                    
+                        <label for="query" class="label">Database Name</label>
+                        <input type="text" class="form-control" name="database" id="database" placeholder="Enter Database Name"><br><br>
+
+                        <label for="query" class="label">User Name</label>
+                        <input type="text" class="form-control" name="user" id="user" placeholder="Enter User Name"><br><br>
+
+                        <label for="query" class="label">Password</label>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password"><br><br>
+
+                        <label for="choice" class="label">Choice</label>
+                        {{ form.choices(class="form-control") }}<br><br>
+
+                        <label for="query" class="label" style="text-align: center;">Query</label><br><br>
+                        <textarea class="form-control" name="query" id="query" placeholder="Enter Query" rows="5" cols="33"></textarea><br><br>
+                        
+                        <button type="submit" class="btn btn-primary">Analyze</button><br><br>
+
+                        <h4 style="text-align: center;">Result</h4><br>
+                        <table class="table-bordered" border="1">
+                            <!-- {% for column in columns %}
+                                <tr>
+                                    <th>{{ column }}</th>
+            
+                                </tr>
+                            {% endfor %}
+                            {% for result in results %}
+                            
+                                <tr>
+                                    <td>{{result}}</td>
+            
+                                </tr>
+                            {% endfor %} -->
+                            {{ data | safe }}
+                        </table>
+
+                        <div class="reg_btn"><a href="{{ url_for('logout') }}" style="text-align: center;">Log out</a></div>
+
+                    </div>
+                    
+
+                </form>
+        </div>
+    </div>
+    
+</body>
+</html>
