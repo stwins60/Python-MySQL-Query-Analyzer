@@ -73,17 +73,8 @@ pipeline {
             steps {
                         echo 'Configuring Azure'
                         sh AZURE_CREDENTIALS'
-                        if(params.ACTION == 'APPLY') {
-                            echo "Peforming Terraform Apply"
-                            sh 'terraform apply -auto-approve'
-                        }
-                        else if (params.ACTION == 'DESTROY') {
-                            echo "Peforming Terraform Destroy"
-                            sh 'terraform destroy -auto-approve'
-                        }
-                        else {
-                            error "Invalid action selected." 
-                        }
+			sh 'kubectl run con1 --image=$imageName --dry-run=client - yaml > cons.yaml'
+			sh 'kubectl apply of cons.yaml'
             }
         }
         
