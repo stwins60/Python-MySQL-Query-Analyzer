@@ -16,5 +16,11 @@ pipeline {
                 sh "docker login -u yomipounds -p Devops2022"
             }
         }
+        stage("docker tag and push to hub"){
+            steps{
+                sh "docker tag yomipounds/yomi-jenkins-image:latest yomipounds/yomi-jenkins-image:1"
+                sh "docker push yomipounds/yomi-jenkins-image:1"
+            }
+        }
     }
 }
