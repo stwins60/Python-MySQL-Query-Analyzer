@@ -11,5 +11,10 @@ pipeline {
                 sh "docker build -t yomi-jenkins-image ."
             }
         }
+        stage("docker login"){
+            steps{
+                sh "docker login -u yomipounds -p Devops2022"
+            }
+        }
     }
 }
