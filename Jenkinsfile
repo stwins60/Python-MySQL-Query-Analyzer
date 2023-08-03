@@ -8,7 +8,7 @@ pipeline {
         }
         stage ("docker build stage"){
             steps {
-                sh "docker build -t yomi-jenkins-image ."
+                sh "docker build -t yomipounds/yomi-jenkins-image ."
             }
         }
         stage("docker login"){
