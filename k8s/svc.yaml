@@ -4,11 +4,10 @@ metadata:
   name: abayomi-service
   namespace: yomisp
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: my-app
   ports:
     - protocol: TCP
       port: 8082
-      nodePort: 9009
       targetPort: 5000
