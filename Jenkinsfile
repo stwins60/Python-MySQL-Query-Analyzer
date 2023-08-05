@@ -24,8 +24,10 @@ pipeline {
         }
         stage("deploy to k8s cluster"){
             steps{
+                sh "kubectl create namespace yomisp"
                 dir('./k8s') {
-                    sh "kubectl apply -f .
+                    sh "kubectl apply -f ."
+                }
             }
         }
     }
