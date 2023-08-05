@@ -1,0 +1,40 @@
+pipeline {
+    
+    agent any
+    
+     environment {
+    DOCKERHUB_CREDENTIALS = credentials('pierrendomo-dockerhub')
+  }
+
+    stages {
+        
+        stage("checkout source") {
+            steps {
+                git branch: 'main', changelog: false, url: 'https://github.com/patangana/Python-MySQL-Query-Analyzer.git'
+                
+            }   
+        }
+        stage("build") {
+            steps {
+        sh """
+          docker build -t pierrendomo/new-query-app1 .
+        """ 
+            }
+        }
+        stage("login") {
+            steps {
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage("push") {
+            steps {
+           sh 'docker push pierrendomo/new-query-app1'
+            }
+        }
+    }
+     post {
+    always {
+      sh 'docker logout'
+    }
+  }
+}
