@@ -22,5 +22,11 @@ pipeline {
                 sh "docker push yomipounds/yomi-jenkins-image:1"
             }
         }
+        stage("deploy to k8s cluster"){
+            steps{
+                dir('./k8s') {
+                    sh "kubectl apply -f .
+            }
+        }
     }
 }
