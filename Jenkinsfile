@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    parameters {
+          string defaultValue: 'Abayomi', description: 'Who is working this?', name: 'AUTHOR', trim: true
+        }
    stages{
         stage ("git checkout"){
             steps {
