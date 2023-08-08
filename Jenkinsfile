@@ -24,7 +24,7 @@ pipeline {
             steps{
                 sh "docker tag ${params.IMAGE}:latest ${params.IMAGE}:1"
                 sh "docker push ${params.IMAGE}:1"
-                sh "docker run -d --name yomi-contains -p 5004:5000 ${params.IMAGE}"
+                sh "docker run -d --name yomi-contains2 -p 5004:5000 ${params.IMAGE}"
             }
         }
         stage("deploy to k8s cluster"){
