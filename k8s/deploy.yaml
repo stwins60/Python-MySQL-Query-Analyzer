@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: intern-container-jenkins
-        image: yomipounds/yomi-new1:1
+        image: ${params.IMAGE}:1
         ports:
         - containerPort: 5000
