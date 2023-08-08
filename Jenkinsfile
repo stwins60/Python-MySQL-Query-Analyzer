@@ -3,6 +3,7 @@ pipeline {
     parameters {
           string defaultValue: 'Abayomi', description: 'Who is working this?', name: 'AUTHOR', trim: true
           choice choices: ['yomipounds/yomi1', 'yomipounds/yomi2', 'yomipounds/yomi3'], description: 'what image name to use for this build', name: 'IMAGE'
+          choice choices: ['yomi-contains', 'yomi-contains1', 'yomi-contains2'], description: 'update container name when image changes', name: 'CONTAINER'
         }
    stages{
         stage ("git checkout"){
@@ -24,7 +25,7 @@ pipeline {
             steps{
                 sh "docker tag ${params.IMAGE}:latest ${params.IMAGE}:1"
                 sh "docker push ${params.IMAGE}:1"
-                sh "docker run -d --name yomi-contains2 -p 5004:5000 ${params.IMAGE}"
+                sh "docker run -d --name yomi-contains -p 5001:5000 ${params.IMAGE}"
             }
         }
         stage("deploy to k8s cluster"){
