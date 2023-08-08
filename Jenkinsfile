@@ -2,6 +2,7 @@ pipeline {
     agent any
     parameters {
           string defaultValue: 'Abayomi', description: 'Who is working this?', name: 'AUTHOR', trim: true
+          choice choices: ['yomipounds/yomi1', 'yomipounds/yomi2', 'yomipounds/yomi3'], description: 'what image name to use for this build', name: 'IMAGE'
         }
    stages{
         stage ("git checkout"){
@@ -11,7 +12,7 @@ pipeline {
         }
         stage ("docker build stage"){
             steps {
-                sh "docker build -t yomipounds/yomi-jenkins-image ."
+                sh "docker build -t ${params.IMAGE} ."
             }
         }
         stage("docker login"){
@@ -19,10 +20,11 @@ pipeline {
                 sh "docker login -u yomipounds -p Devops2022"
             }
         }
-        stage("docker tag and push to hub"){
+        stage("docker tag, push to hub and run container"){
             steps{
-                sh "docker tag yomipounds/yomi-jenkins-image:latest yomipounds/yomi-jenkins-image:1"
-                sh "docker push yomipounds/yomi-jenkins-image:1"
+                sh "docker tag ${params.IMAGE}:latest ${params.IMAGE}:1"
+                sh "docker push ${params.IMAGE}:1"
+                sh "docker run -d --name yomi-contains -p 5004-5000 ${params.IMAGE}"
             }
         }
         stage("deploy to k8s cluster"){
