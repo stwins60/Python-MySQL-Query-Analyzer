@@ -5,7 +5,18 @@ This is a flask web application that allows user to perform SQL CRUD fuctions. *
 ## Requirements
 - Create your **virtual environment** by running `virtualenv venv` 
 - Activate the virtual environment:
-1. **For windows users** -> `.\venv\Scripts\activate`
-2. **For mac users** -> `source env/bin/activate`
-- Once virtualenv has been activated. Run `pip install -r requirements.txt`. **NOTE** If you install a new package, make sure to run `pip freeze > requirements.txt`
+    1. **For windows users** -> `.\venv\Scripts\activate`
+    2. **For mac users** -> `source env/bin/activate`
+        - Once virtualenv has been activated. Run `pip install -r requirements.txt`. **NOTE** If you install a new package, make sure to run `pip freeze > requirements.txt` to update the requirements.txt file.
+- Create a .env file with the database credentials. **NOTE** The .env file is already in the .gitignore file so it will not be pushed to github.
+    - `MYSQL_HOST = ""`
+    - `MYSQL_USER = ""`
+    - `MYSQL_PASSWORD = ""`
+    - `MYSQL_DATABASE= ""`
+    - `MYSQL_PORT = 3306`
+
+## How to run the application
+- For development purposes, Run `python app.py` to start the application.
+- For production purposes, Run `waitress-serve --listen=0.0.0.0:5000 app:app` to start the application.
+
 

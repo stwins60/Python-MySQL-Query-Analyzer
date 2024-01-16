@@ -5,17 +5,39 @@ import secrets
 from flask_wtf import FlaskForm
 from wtforms import SelectField
 import mysql.connector as mysql
+from mysql.connector import Error
 import pandas as pd
+import schema
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
 app.config['FLASK_ENV'] = 'development'
 app.config['DEBUG'] = True
 
+config = {
+    'host': os.getenv('MYSQL_HOST'),
+    'port': 3306,
+    'user': os.getenv('MYSQL_USER'),
+    'password': os.getenv('MYSQL_PASSWORD'),
+    'database': os.getenv('MYSQL_DATABASE')
+}
+
+def get_db_conn():
+    try:
+        conn = mysql.connect(**config)
+        return conn
+    except Error as e:
+        return "<html><body><h1>500 Internal Server Error</h1></body></html>"
 
 class Form(FlaskForm):
     choices = SelectField('choice', choices=['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'ALTER', 'DROP'])
 
+schema.create_database(get_db_conn())
+schema.create_user_table(get_db_conn())
 
 @app.route('/', methods=['GET'])
 def login():
@@ -23,12 +45,13 @@ def login():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login_post():
+    conn = get_db_conn()
+    cur = conn.cursor()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        with sqlite3.connect('user.db') as con:
-            cur = con.cursor()
-            cur.execute("SELECT * FROM users WHERE username = ?", (username,))
+        with app.app_context():
+            cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
             user = cur.fetchone()
             if user is None:
                 flash('Username not found', 'danger')
@@ -47,6 +70,8 @@ def login_post():
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
+    conn = get_db_conn()
+    cur = conn.cursor()
     msg = ''
     if request.method == 'POST':
         username = request.form['username']
@@ -55,16 +80,15 @@ def register():
 
         # checking if username is already registered
         with sqlite3.connect('user.db') as con:
-            cur = con.cursor()
-            cur.execute("SELECT * FROM users WHERE username = ?", (username,))
+            cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
             users = cur.fetchone()
+        if users is not None:
+            msg = "Username already exists"
         if password == password_confirm:
             password = sha256_crypt.hash(password)
             try:
-                with sqlite3.connect('user.db') as conn:
-                    cur = conn.cursor()
-                    cur.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
-                    conn.commit()
+               with app.app_context():
+                    schema.insert_user(conn, username, password)
                     msg = "Registered Successfully"
         
             except:
