@@ -79,7 +79,7 @@ def register():
         password_confirm = request.form['password_confirm']
 
         # checking if username is already registered
-        with sqlite3.connect('user.db') as con:
+        with app.app_context():
             cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
             users = cur.fetchone()
         if users is not None:
